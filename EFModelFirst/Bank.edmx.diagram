@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="abecfb469ea64a519108d55228f5a988" Name="Diagram1">
+        <EntityTypeShape EntityType="BankModel.account" Width="1.5" PointX="0.5" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BankModel.branch" Width="1.5" PointX="0.5" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BankModel.customer" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BankModel.loan" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BankModel.LoanPerCustomer" Width="1.5" PointX="7" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BankModel.TotalLoanAndDepositsPerBranch" Width="1.5" PointX="5.125" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BankModel.TotalLoanPerBranch" Width="1.5" PointX="5" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BankModel.vAverageBalancePerBranch" Width="1.5" PointX="7" PointY="2.875" IsExpanded="true" />
+        <AssociationConnector Association="BankModel.fk_account" ManuallyRouted="false" />
+        <AssociationConnector Association="BankModel.fk_loan" ManuallyRouted="false" />
+        <AssociationConnector Association="BankModel.borrower" ManuallyRouted="false" />
+        <AssociationConnector Association="BankModel.depositor" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

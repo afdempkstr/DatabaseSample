@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace DatabaseSample
 {
     class Program
     {
         static string connectionString = "Server=.;Database=bank;User Id=testuser;Password=testpass";
+
 
         static void Main(string[] args)
         {
@@ -21,6 +23,9 @@ namespace DatabaseSample
 
         static void Method1()
         {
+            //var connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+            //var connectionString = Properties.Settings.Default.ConnectionString;
+
             SqlConnection dbcon = new SqlConnection(connectionString);
             dbcon.Open();
             var cmd = new SqlCommand("select * from customer", dbcon);

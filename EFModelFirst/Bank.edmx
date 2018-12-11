@@ -1,0 +1,670 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BankModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="accno" />
+          </Key>
+          <Property Name="accno" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="bcode" Type="int" Nullable="false" />
+          <Property Name="balance" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="borrower">
+          <Key>
+            <PropertyRef Name="cid" />
+            <PropertyRef Name="lnum" />
+          </Key>
+          <Property Name="cid" Type="int" Nullable="false" />
+          <Property Name="lnum" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="branch">
+          <Key>
+            <PropertyRef Name="bcode" />
+          </Key>
+          <Property Name="bcode" Type="int" Nullable="false" />
+          <Property Name="bname" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="city" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="assets" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="customer">
+          <Key>
+            <PropertyRef Name="cid" />
+          </Key>
+          <Property Name="cid" Type="int" Nullable="false" />
+          <Property Name="firstname" Type="varchar" MaxLength="30" />
+          <Property Name="lastname" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="city" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="depositor">
+          <Key>
+            <PropertyRef Name="cid" />
+            <PropertyRef Name="accno" />
+          </Key>
+          <Property Name="cid" Type="int" Nullable="false" />
+          <Property Name="accno" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="loan">
+          <Key>
+            <PropertyRef Name="lnum" />
+          </Key>
+          <Property Name="lnum" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="bcode" Type="int" Nullable="false" />
+          <Property Name="amount" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="interestrate" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'bank.dbo.LoanPerCustomer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="LoanPerCustomer">
+          <Key>
+            <PropertyRef Name="lastname" />
+          </Key>
+          <Property Name="firstname" Type="varchar" MaxLength="30" />
+          <Property Name="lastname" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="total" Type="numeric" Precision="38" Scale="0" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'bank.dbo.TotalLoanAndDepositsPerBranch' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TotalLoanAndDepositsPerBranch">
+          <Key>
+            <PropertyRef Name="bname" />
+          </Key>
+          <Property Name="bname" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="totalloans" Type="numeric" Precision="38" Scale="0" />
+          <Property Name="deposits" Type="numeric" Precision="38" Scale="0" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'bank.dbo.TotalLoanPerBranch' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TotalLoanPerBranch">
+          <Key>
+            <PropertyRef Name="bcode" />
+            <PropertyRef Name="bname" />
+          </Key>
+          <Property Name="bcode" Type="int" Nullable="false" />
+          <Property Name="bname" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="totalloans" Type="numeric" Precision="38" Scale="0" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'bank.dbo.vAverageBalancePerBranch' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vAverageBalancePerBranch">
+          <Key>
+            <PropertyRef Name="bname" />
+          </Key>
+          <Property Name="bname" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="avgbalance" Type="numeric" Precision="38" Scale="6" />
+        </EntityType>
+        <Association Name="fk_account">
+          <End Role="branch" Type="Self.branch" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="branch">
+              <PropertyRef Name="bcode" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="bcode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_loan">
+          <End Role="branch" Type="Self.branch" Multiplicity="1" />
+          <End Role="loan" Type="Self.loan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="branch">
+              <PropertyRef Name="bcode" />
+            </Principal>
+            <Dependent Role="loan">
+              <PropertyRef Name="bcode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk1_borrower">
+          <End Role="customer" Type="Self.customer" Multiplicity="1" />
+          <End Role="borrower" Type="Self.borrower" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="cid" />
+            </Principal>
+            <Dependent Role="borrower">
+              <PropertyRef Name="cid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk1_depositor">
+          <End Role="customer" Type="Self.customer" Multiplicity="1" />
+          <End Role="depositor" Type="Self.depositor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="cid" />
+            </Principal>
+            <Dependent Role="depositor">
+              <PropertyRef Name="cid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk2_borrower">
+          <End Role="loan" Type="Self.loan" Multiplicity="1" />
+          <End Role="borrower" Type="Self.borrower" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="loan">
+              <PropertyRef Name="lnum" />
+            </Principal>
+            <Dependent Role="borrower">
+              <PropertyRef Name="lnum" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk2_depositor">
+          <End Role="account" Type="Self.account" Multiplicity="1" />
+          <End Role="depositor" Type="Self.depositor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="accno" />
+            </Principal>
+            <Dependent Role="depositor">
+              <PropertyRef Name="accno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="Get_Customer_Info" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="customer_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Get_Customer_Name" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="customer_id" Type="int" Mode="In" />
+          <Parameter Name="customer_name" Type="varchar" Mode="InOut" />
+        </Function>
+        <Function Name="Insert_Customer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="cid" Type="int" Mode="In" />
+          <Parameter Name="firstname" Type="varchar" Mode="In" />
+          <Parameter Name="lastname" Type="varchar" Mode="In" />
+          <Parameter Name="city" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="Loan_Interest_Rate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Low" Type="int" Mode="In" />
+          <Parameter Name="Medium" Type="int" Mode="In" />
+          <Parameter Name="High" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Rate_Customers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Rate_Customers_Table" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="BankModelStoreContainer">
+          <EntitySet Name="account" EntityType="Self.account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="borrower" EntityType="Self.borrower" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="branch" EntityType="Self.branch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="customer" EntityType="Self.customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="depositor" EntityType="Self.depositor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="loan" EntityType="Self.loan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoanPerCustomer" EntityType="Self.LoanPerCustomer" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [LoanPerCustomer].[firstname] AS [firstname], 
+    [LoanPerCustomer].[lastname] AS [lastname], 
+    [LoanPerCustomer].[total] AS [total]
+    FROM [dbo].[LoanPerCustomer] AS [LoanPerCustomer]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="TotalLoanAndDepositsPerBranch" EntityType="Self.TotalLoanAndDepositsPerBranch" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TotalLoanAndDepositsPerBranch].[bname] AS [bname], 
+    [TotalLoanAndDepositsPerBranch].[totalloans] AS [totalloans], 
+    [TotalLoanAndDepositsPerBranch].[deposits] AS [deposits]
+    FROM [dbo].[TotalLoanAndDepositsPerBranch] AS [TotalLoanAndDepositsPerBranch]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="TotalLoanPerBranch" EntityType="Self.TotalLoanPerBranch" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TotalLoanPerBranch].[bcode] AS [bcode], 
+    [TotalLoanPerBranch].[bname] AS [bname], 
+    [TotalLoanPerBranch].[totalloans] AS [totalloans]
+    FROM [dbo].[TotalLoanPerBranch] AS [TotalLoanPerBranch]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vAverageBalancePerBranch" EntityType="Self.vAverageBalancePerBranch" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vAverageBalancePerBranch].[bname] AS [bname], 
+    [vAverageBalancePerBranch].[avgbalance] AS [avgbalance]
+    FROM [dbo].[vAverageBalancePerBranch] AS [vAverageBalancePerBranch]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="fk_account" Association="Self.fk_account">
+            <End Role="branch" EntitySet="branch" />
+            <End Role="account" EntitySet="account" />
+          </AssociationSet>
+          <AssociationSet Name="fk_loan" Association="Self.fk_loan">
+            <End Role="branch" EntitySet="branch" />
+            <End Role="loan" EntitySet="loan" />
+          </AssociationSet>
+          <AssociationSet Name="fk1_borrower" Association="Self.fk1_borrower">
+            <End Role="customer" EntitySet="customer" />
+            <End Role="borrower" EntitySet="borrower" />
+          </AssociationSet>
+          <AssociationSet Name="fk1_depositor" Association="Self.fk1_depositor">
+            <End Role="customer" EntitySet="customer" />
+            <End Role="depositor" EntitySet="depositor" />
+          </AssociationSet>
+          <AssociationSet Name="fk2_borrower" Association="Self.fk2_borrower">
+            <End Role="loan" EntitySet="loan" />
+            <End Role="borrower" EntitySet="borrower" />
+          </AssociationSet>
+          <AssociationSet Name="fk2_depositor" Association="Self.fk2_depositor">
+            <End Role="account" EntitySet="account" />
+            <End Role="depositor" EntitySet="depositor" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BankModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="accno" />
+          </Key>
+          <Property Name="accno" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="bcode" Type="Int32" Nullable="false" />
+          <Property Name="balance" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <NavigationProperty Name="branch" Relationship="Self.fk_account" FromRole="account" ToRole="branch" />
+          <NavigationProperty Name="customers" Relationship="Self.depositor" FromRole="account" ToRole="customer" />
+        </EntityType>
+        <EntityType Name="branch">
+          <Key>
+            <PropertyRef Name="bcode" />
+          </Key>
+          <Property Name="bcode" Type="Int32" Nullable="false" />
+          <Property Name="bname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="city" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="assets" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <NavigationProperty Name="accounts" Relationship="Self.fk_account" FromRole="branch" ToRole="account" />
+          <NavigationProperty Name="loans" Relationship="Self.fk_loan" FromRole="branch" ToRole="loan" />
+        </EntityType>
+        <EntityType Name="customer">
+          <Key>
+            <PropertyRef Name="cid" />
+          </Key>
+          <Property Name="cid" Type="Int32" Nullable="false" />
+          <Property Name="firstname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="lastname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="city" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="loans" Relationship="Self.borrower" FromRole="customer" ToRole="loan" />
+          <NavigationProperty Name="accounts" Relationship="Self.depositor" FromRole="customer" ToRole="account" />
+        </EntityType>
+        <EntityType Name="loan">
+          <Key>
+            <PropertyRef Name="lnum" />
+          </Key>
+          <Property Name="lnum" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="bcode" Type="Int32" Nullable="false" />
+          <Property Name="amount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="interestrate" Type="Int32" />
+          <NavigationProperty Name="branch" Relationship="Self.fk_loan" FromRole="loan" ToRole="branch" />
+          <NavigationProperty Name="customers" Relationship="Self.borrower" FromRole="loan" ToRole="customer" />
+        </EntityType>
+        <EntityType Name="LoanPerCustomer">
+          <Key>
+            <PropertyRef Name="lastname" />
+          </Key>
+          <Property Name="firstname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="lastname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="total" Type="Decimal" Precision="38" Scale="0" />
+        </EntityType>
+        <EntityType Name="TotalLoanAndDepositsPerBranch">
+          <Key>
+            <PropertyRef Name="bname" />
+          </Key>
+          <Property Name="bname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="totalloans" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="deposits" Type="Decimal" Precision="38" Scale="0" />
+        </EntityType>
+        <EntityType Name="TotalLoanPerBranch">
+          <Key>
+            <PropertyRef Name="bcode" />
+            <PropertyRef Name="bname" />
+          </Key>
+          <Property Name="bcode" Type="Int32" Nullable="false" />
+          <Property Name="bname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="totalloans" Type="Decimal" Precision="38" Scale="0" />
+        </EntityType>
+        <EntityType Name="vAverageBalancePerBranch">
+          <Key>
+            <PropertyRef Name="bname" />
+          </Key>
+          <Property Name="bname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="avgbalance" Type="Decimal" Precision="38" Scale="6" />
+        </EntityType>
+        <Association Name="fk_account">
+          <End Role="branch" Type="Self.branch" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="branch">
+              <PropertyRef Name="bcode" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="bcode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_loan">
+          <End Role="branch" Type="Self.branch" Multiplicity="1" />
+          <End Role="loan" Type="Self.loan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="branch">
+              <PropertyRef Name="bcode" />
+            </Principal>
+            <Dependent Role="loan">
+              <PropertyRef Name="bcode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="borrower">
+          <End Role="customer" Type="Self.customer" Multiplicity="*" />
+          <End Role="loan" Type="Self.loan" Multiplicity="*" />
+        </Association>
+        <Association Name="depositor">
+          <End Role="customer" Type="Self.customer" Multiplicity="*" />
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="bankEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="accounts" EntityType="Self.account" />
+          <EntitySet Name="branches" EntityType="Self.branch" />
+          <EntitySet Name="customers" EntityType="Self.customer" />
+          <EntitySet Name="loans" EntityType="Self.loan" />
+          <EntitySet Name="LoanPerCustomers" EntityType="Self.LoanPerCustomer" />
+          <EntitySet Name="TotalLoanAndDepositsPerBranches" EntityType="Self.TotalLoanAndDepositsPerBranch" />
+          <EntitySet Name="TotalLoanPerBranches" EntityType="Self.TotalLoanPerBranch" />
+          <EntitySet Name="vAverageBalancePerBranches" EntityType="Self.vAverageBalancePerBranch" />
+          <AssociationSet Name="fk_account" Association="Self.fk_account">
+            <End Role="branch" EntitySet="branches" />
+            <End Role="account" EntitySet="accounts" />
+          </AssociationSet>
+          <AssociationSet Name="fk_loan" Association="Self.fk_loan">
+            <End Role="branch" EntitySet="branches" />
+            <End Role="loan" EntitySet="loans" />
+          </AssociationSet>
+          <AssociationSet Name="borrower" Association="Self.borrower">
+            <End Role="customer" EntitySet="customers" />
+            <End Role="loan" EntitySet="loans" />
+          </AssociationSet>
+          <AssociationSet Name="depositor" Association="Self.depositor">
+            <End Role="customer" EntitySet="customers" />
+            <End Role="account" EntitySet="accounts" />
+          </AssociationSet>
+          <FunctionImport Name="Get_Customer_Info" ReturnType="Collection(BankModel.Get_Customer_Info_Result)">
+            <Parameter Name="customer_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Get_Customer_Name">
+            <Parameter Name="customer_id" Mode="In" Type="Int32" />
+            <Parameter Name="customer_name" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Insert_Customer">
+            <Parameter Name="cid" Mode="In" Type="Int32" />
+            <Parameter Name="firstname" Mode="In" Type="String" />
+            <Parameter Name="lastname" Mode="In" Type="String" />
+            <Parameter Name="city" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Loan_Interest_Rate">
+            <Parameter Name="Low" Mode="In" Type="Int32" />
+            <Parameter Name="Medium" Mode="In" Type="Int32" />
+            <Parameter Name="High" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Rate_Customers" ReturnType="Collection(BankModel.Rate_Customers_Result)" />
+          <FunctionImport Name="Rate_Customers_Table" ReturnType="Collection(BankModel.Rate_Customers_Table_Result)" />
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(BankModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(BankModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+        </EntityContainer>
+        <ComplexType Name="Get_Customer_Info_Result">
+          <Property Type="String" Name="firstname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="lastname" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="city" Nullable="false" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="Rate_Customers_Result">
+          <Property Type="String" Name="firstname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="lastname" Nullable="false" MaxLength="30" />
+          <Property Type="Decimal" Name="deposits" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="String" Name="evaluation" Nullable="false" MaxLength="6" />
+        </ComplexType>
+        <ComplexType Name="Rate_Customers_Table_Result">
+          <Property Type="Int32" Name="cid" Nullable="true" />
+          <Property Type="String" Name="lastname" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="rate" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BankModelStoreContainer" CdmEntityContainer="bankEntities">
+          <EntitySetMapping Name="accounts">
+            <EntityTypeMapping TypeName="BankModel.account">
+              <MappingFragment StoreEntitySet="account">
+                <ScalarProperty Name="accno" ColumnName="accno" />
+                <ScalarProperty Name="bcode" ColumnName="bcode" />
+                <ScalarProperty Name="balance" ColumnName="balance" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="branches">
+            <EntityTypeMapping TypeName="BankModel.branch">
+              <MappingFragment StoreEntitySet="branch">
+                <ScalarProperty Name="bcode" ColumnName="bcode" />
+                <ScalarProperty Name="bname" ColumnName="bname" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="assets" ColumnName="assets" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customers">
+            <EntityTypeMapping TypeName="BankModel.customer">
+              <MappingFragment StoreEntitySet="customer">
+                <ScalarProperty Name="cid" ColumnName="cid" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="city" ColumnName="city" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="loans">
+            <EntityTypeMapping TypeName="BankModel.loan">
+              <MappingFragment StoreEntitySet="loan">
+                <ScalarProperty Name="lnum" ColumnName="lnum" />
+                <ScalarProperty Name="bcode" ColumnName="bcode" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="interestrate" ColumnName="interestrate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoanPerCustomers">
+            <EntityTypeMapping TypeName="BankModel.LoanPerCustomer">
+              <MappingFragment StoreEntitySet="LoanPerCustomer">
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="total" ColumnName="total" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TotalLoanAndDepositsPerBranches">
+            <EntityTypeMapping TypeName="BankModel.TotalLoanAndDepositsPerBranch">
+              <MappingFragment StoreEntitySet="TotalLoanAndDepositsPerBranch">
+                <ScalarProperty Name="bname" ColumnName="bname" />
+                <ScalarProperty Name="totalloans" ColumnName="totalloans" />
+                <ScalarProperty Name="deposits" ColumnName="deposits" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TotalLoanPerBranches">
+            <EntityTypeMapping TypeName="BankModel.TotalLoanPerBranch">
+              <MappingFragment StoreEntitySet="TotalLoanPerBranch">
+                <ScalarProperty Name="bcode" ColumnName="bcode" />
+                <ScalarProperty Name="bname" ColumnName="bname" />
+                <ScalarProperty Name="totalloans" ColumnName="totalloans" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vAverageBalancePerBranches">
+            <EntityTypeMapping TypeName="BankModel.vAverageBalancePerBranch">
+              <MappingFragment StoreEntitySet="vAverageBalancePerBranch">
+                <ScalarProperty Name="bname" ColumnName="bname" />
+                <ScalarProperty Name="avgbalance" ColumnName="avgbalance" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="borrower" TypeName="BankModel.borrower" StoreEntitySet="borrower">
+            <EndProperty Name="customer">
+              <ScalarProperty Name="cid" ColumnName="cid" />
+            </EndProperty>
+            <EndProperty Name="loan">
+              <ScalarProperty Name="lnum" ColumnName="lnum" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="depositor" TypeName="BankModel.depositor" StoreEntitySet="depositor">
+            <EndProperty Name="customer">
+              <ScalarProperty Name="cid" ColumnName="cid" />
+            </EndProperty>
+            <EndProperty Name="account">
+              <ScalarProperty Name="accno" ColumnName="accno" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="Get_Customer_Info" FunctionName="BankModel.Store.Get_Customer_Info">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BankModel.Get_Customer_Info_Result">
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="city" ColumnName="city" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Get_Customer_Name" FunctionName="BankModel.Store.Get_Customer_Name" />
+          <FunctionImportMapping FunctionImportName="Insert_Customer" FunctionName="BankModel.Store.Insert_Customer" />
+          <FunctionImportMapping FunctionImportName="Loan_Interest_Rate" FunctionName="BankModel.Store.Loan_Interest_Rate" />
+          <FunctionImportMapping FunctionImportName="Rate_Customers" FunctionName="BankModel.Store.Rate_Customers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BankModel.Rate_Customers_Result">
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="deposits" ColumnName="deposits" />
+                <ScalarProperty Name="evaluation" ColumnName="evaluation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Rate_Customers_Table" FunctionName="BankModel.Store.Rate_Customers_Table">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BankModel.Rate_Customers_Table_Result">
+                <ScalarProperty Name="cid" ColumnName="cid" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="rate" ColumnName="rate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="BankModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="BankModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="BankModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="BankModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BankModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="BankModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BankModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="BankModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="BankModel.Store.sp_upgraddiagrams" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
