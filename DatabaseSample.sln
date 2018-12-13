@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFSample", "EFSample\EFSamp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCodeFirstSample", "EFCodeFirstSample\EFCodeFirstSample.csproj", "{DCAD043B-E876-4B9C-BC45-84FC6D10AC18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCoreSample", "EFCoreSample\EFCoreSample.csproj", "{D494E084-F91B-4A2D-9C37-724B67E80F32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DapperSample", "DapperSample\DapperSample.csproj", "{D407D094-DD6C-40D5-A514-2024CFEA60C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{DCAD043B-E876-4B9C-BC45-84FC6D10AC18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCAD043B-E876-4B9C-BC45-84FC6D10AC18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCAD043B-E876-4B9C-BC45-84FC6D10AC18}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D494E084-F91B-4A2D-9C37-724B67E80F32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D494E084-F91B-4A2D-9C37-724B67E80F32}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D494E084-F91B-4A2D-9C37-724B67E80F32}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D494E084-F91B-4A2D-9C37-724B67E80F32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D407D094-DD6C-40D5-A514-2024CFEA60C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D407D094-DD6C-40D5-A514-2024CFEA60C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D407D094-DD6C-40D5-A514-2024CFEA60C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D407D094-DD6C-40D5-A514-2024CFEA60C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
