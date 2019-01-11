@@ -32,7 +32,7 @@ namespace EFDbFirst
         public void Print()
         {
             Console.WriteLine($"{Name} ({RestaurantId}):" +
-                $" Address: {Address}, IsOpen: {IsOpen}, Cuisine: {Cuisine?.Description ?? "Unknown"}");
+                $" Address: {Address}, IsOpen: {IsOpen}, Cuisine: {Cuisine?.Description ?? "Unknown"}, MinumumOrder: {MinimumOrder}");
         }
     }
 }
