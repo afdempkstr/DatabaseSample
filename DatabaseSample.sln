@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCodeFirstSample", "EFCode
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DapperSample", "DapperSample\DapperSample.csproj", "{D407D094-DD6C-40D5-A514-2024CFEA60C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFDbFirst", "EFDbFirst\EFDbFirst.csproj", "{369006DB-C711-4659-9DCC-863988902A78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D407D094-DD6C-40D5-A514-2024CFEA60C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D407D094-DD6C-40D5-A514-2024CFEA60C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D407D094-DD6C-40D5-A514-2024CFEA60C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{369006DB-C711-4659-9DCC-863988902A78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{369006DB-C711-4659-9DCC-863988902A78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{369006DB-C711-4659-9DCC-863988902A78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{369006DB-C711-4659-9DCC-863988902A78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

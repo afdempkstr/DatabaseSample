@@ -79,10 +79,15 @@ namespace DapperSample
                 dbcon.Open();
                 var loans = dbcon.Query("select * from loan where bcode=@bcode", new { bcode = 100 });
                 //each loan is a dynamic - an object from which we can get properties by name
-                foreach (var loan in loans)
-                {
-                    Console.WriteLine($"LNUM: {loan.lnum}, BCode: {loan.bcode}, Amount: {loan.amount}, Rate: {loan.interestrate}");
-                }
+                PrintLoans(loans);
+            }
+        }
+
+        private static void PrintLoans(IEnumerable<dynamic> loans)
+        {
+            foreach (var loan in loans)
+            {
+                Console.WriteLine($"LNUM: {loan.lnum}, BCode: {loan.bcode}, Amount: {loan.amount}, Rate: {loan.interestrate}");
             }
         }
     }

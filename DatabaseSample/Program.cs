@@ -12,12 +12,15 @@ namespace DatabaseSample
 
         static void Main(string[] args)
         {
-            //Method1();
-            //Method2();
-            //Method3();
-            //Method4();
-            //Method5();
-            Method6();
+            for (int i = 0; i < 100; i++)
+            {
+                Method1();
+                Method2();
+                //Method3();
+                Method4();
+                Method5();
+                Method6();
+            }
             Console.Read();
         }
 
