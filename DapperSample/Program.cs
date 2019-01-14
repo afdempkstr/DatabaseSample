@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 
@@ -9,24 +10,33 @@ namespace DapperSample
 {
     class Program
     {
-        static string connectionString = "Server=.;Database=bank;User Id=testuser;Password=testpass";
+        static string connectionString = Properties.Settings.Default.connectionString;
+        static BankDatabase db = new BankDatabase(connectionString);
 
         static void Main(string[] args)
         {
+            //connectionString = "Server=.;Database=bank;User Id=yyy;Password=bankpass";
+            //Properties.Settings.Default.connectionString = connectionString;
+            //Properties.Settings.Default.Save();
+
+
             //Method1();
             //Method3();
-            //Method4();
-            Method5();
+            Method4();
+            //Method5();
+
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
         }
 
         static void Method1()
         {
-            var customers = new List<Customer>();
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
-            {
-                dbcon.Open();
+            var customers = db.GetCustomers("select * from customer");
 
-                customers.AddRange(dbcon.Query<Customer>("select * from customer"));
+            if (customers == null)
+            {
+                Console.WriteLine("DB problem");
+                return;
             }
 
             foreach (var c in customers)
@@ -62,8 +72,12 @@ namespace DapperSample
             {
                 dbcon.Open();
 
+                //don't do this, for the love of God
+                Console.WriteLine("Give the customer id:");
+                var customerId = int.Parse(Console.ReadLine());
+
                 var parameters = new DynamicParameters();
-                parameters.Add("@customer_id", 6);
+                parameters.Add("@customer_id", customerId);
                 parameters.Add("@customer_name", null, size: 100, direction: ParameterDirection.Output);
 
                 var affectedRows = dbcon.Execute("Get_Customer_Name", parameters, commandType: CommandType.StoredProcedure);
@@ -76,10 +90,17 @@ namespace DapperSample
             SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
-                dbcon.Open();
-                var loans = dbcon.Query("select * from loan where bcode=@bcode", new { bcode = 100 });
-                //each loan is a dynamic - an object from which we can get properties by name
-                PrintLoans(loans);
+                try
+                {
+                    dbcon.Open();
+                    var loans = dbcon.Query("select * from loan where bcode=@bcode", new { bcode = 100 });
+                    //each loan is a dynamic - an object from which we can get properties by name
+                    PrintLoans(loans);
+                }
+                catch(DbException dbe)
+                {
+                    Console.WriteLine(dbe);
+                }
             }
         }
 
@@ -90,5 +111,7 @@ namespace DapperSample
                 Console.WriteLine($"LNUM: {loan.lnum}, BCode: {loan.bcode}, Amount: {loan.amount}, Rate: {loan.interestrate}");
             }
         }
+
+        
     }
 }
