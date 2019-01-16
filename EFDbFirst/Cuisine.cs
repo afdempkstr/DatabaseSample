@@ -22,6 +22,6 @@ namespace EFDbFirst
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Restaurant> Restaurants { get; set; }
+        public /* virtual */ ICollection<Restaurant> Restaurants { get; set; }
     }
 }

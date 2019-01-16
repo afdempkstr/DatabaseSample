@@ -10,6 +10,8 @@ namespace EFDbFirst
         public RestaurantModel()
             : base("name=RestaurantModel")
         {
+            //Configuration.LazyLoadingEnabled = true;
+            Configuration.ProxyCreationEnabled = false;
         }
 
         public virtual DbSet<Cuisine> Cuisines { get; set; }

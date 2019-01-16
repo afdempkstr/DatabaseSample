@@ -17,6 +17,27 @@ namespace EFDbFirst
             }
             Console.WriteLine("-------------------");
 
+            using (var db = new RestaurantModel())
+            {
+                var restaurants = db.Database.SqlQuery<Restaurant>("select * FROM restaurant");
+                foreach (var r in restaurants)
+                {
+                    r.Print();
+                }
+
+                //db.Database.ExecuteSqlCommand("SELECT GETDATE()");
+            }
+
+            //using (var db = new RestaurantModel())
+            //{
+            //    var cuisines = db.Cuisines.ToList();
+            //    foreach (var cuisine in cuisines)
+            //    {
+            //        Console.WriteLine(cuisine?.Restaurants?.Count ?? -1);
+            //    }
+            //}
+
+
             foreach (var restaurant in FilterRestaurants(Souvlakia))
             {
                 restaurant.Print();
@@ -103,7 +124,7 @@ namespace EFDbFirst
         {
             using (var db = new RestaurantModel())
             {
-                return db.Restaurants.Include("Cuisine").ToList();
+                return db.Restaurants.Include("Cuisine")*.ToList();
             }
         }
 

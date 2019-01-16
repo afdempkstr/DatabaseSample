@@ -27,7 +27,7 @@ namespace EFDbFirst
 
         public int? CuisineId { get; set; }
 
-        public virtual Cuisine Cuisine { get; set; }
+        public /* virtual */ Cuisine Cuisine { get; set; }
 
         public void Print()
         {
