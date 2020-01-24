@@ -11,6 +11,10 @@ namespace EFDbFirst
     {
         static void Main(string[] args)
         {
+            var restaurantTypeInfo = typeof(Restaurant);
+
+
+
             foreach (var restaurant in GetRestaurants())
             {
                 restaurant.Print();
@@ -124,7 +128,7 @@ namespace EFDbFirst
         {
             using (var db = new RestaurantModel())
             {
-                return db.Restaurants.Include("Cuisine")*.ToList();
+                return db.Restaurants.Include("Cuisine").ToList();
             }
         }
 
